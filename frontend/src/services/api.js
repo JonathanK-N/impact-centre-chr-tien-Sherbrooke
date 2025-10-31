@@ -36,7 +36,7 @@ export function attachInterceptors(accessToken, refreshToken, onLogout) {
       const { refreshToken: storeRefresh } = useApiStore.getState();
       if (error.response?.status === 401 && storeRefresh) {
         try {
-          const refreshUrl = `${apiBase.replace(/\\/$/, "")}/auth/refresh`;
+          const refreshUrl = `${apiBase.replace(/\/$/, "")}/auth/refresh`;
           const refreshResponse = await axios.post(refreshUrl, null, {
             headers: { Authorization: `Bearer ${storeRefresh}` }
           });
