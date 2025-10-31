@@ -118,15 +118,19 @@ Docker
 ------
 
 ```bash
-docker compose up --build
+# Construire l'image full-stack (frontend + backend)
+docker build -t iccs-app .
+
+# Lancer le conteneur (serveur sur http://localhost:8000)
+docker run --env-file backend/.env -p 8000:8000 iccs-app
+
+# Exécuter les migrations à l'intérieur du conteneur (si nécessaire)
+docker run --env-file backend/.env iccs-app flask --app app db upgrade
 ```
 
-Services exposés :
-
-- Frontend : `http://localhost:5173`
-- Backend : `http://localhost:5000`
-
-Le volume `backend-db` stocke la base SQLite (monté sur `backend/instance`).
+> Le `docker-compose.yml` présent dans le dépôt reste utilisable pour du développement
+> local séparé frontend/backend, mais le `Dockerfile` racine est désormais la méthode
+> recommandée pour le déploiement (Railway, etc.).
 
 Préparation Firestore
 ---------------------
@@ -159,15 +163,7 @@ Notes finales
 Déploiement sur Railway
 -----------------------
 
-Les fichiers `railway.toml` et `Procfile` préparent un déploiement automatique (builder Nixpacks).
-
-1. **Variables d’environnement** à définir dans Railway :
-   - `SECRET_KEY`
-   - `JWT_SECRET_KEY`
-   - `DATABASE_URL` (laisser vide pour SQLite embarqué ou pointer vers Postgres/MySQL)
-2. Railway exécutera automatiquement :
-   - `pip install -r backend/requirements.txt`
-   - `npm install --prefix frontend`
-   - `npm run build --prefix frontend` (le bundle est copié dans `backend/app/static/frontend`)
-   - `gunicorn app:create_app --chdir backend --bind 0.0.0.0:$PORT`
-3. Santé : l’endpoint `https://<ton-app>.railway.app/api/docs` peut servir de healthcheck rapide.
+- `railway.toml` est configuré pour utiliser le `Dockerfile` racine (builder `DOCKERFILE`).
+- Variables d’environnement à définir : `SECRET_KEY`, `JWT_SECRET_KEY`, `DATABASE_URL` (optionnel si vous restez sur SQLite).
+- Après le premier déploiement, exécuter les migrations avec `railway run flask --app app db upgrade` (ou basculer vers Postgres et mettre à jour `DATABASE_URL` avant la commande).
+- Le service démarre via `gunicorn app:create_app` et expose l’API + le frontend sur le port fourni par Railway.

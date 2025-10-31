@@ -2,16 +2,5 @@
 name = "impact-centre-iccs"
 
 [build]
-builder = "NIXPACKS"
-
-[phases.setup]
-nixPkgs = ["python311", "nodejs_20"]
-
-[phases.install]
-cmds = ["pip install -r backend/requirements.txt", "npm install --prefix frontend"]
-
-[phases.build]
-cmds = ["npm run build --prefix frontend"]
-
-[start]
-cmd = "gunicorn app:create_app --chdir backend --bind 0.0.0.0:"
+builder = "DOCKERFILE"
+dockerfilePath = "./Dockerfile"
