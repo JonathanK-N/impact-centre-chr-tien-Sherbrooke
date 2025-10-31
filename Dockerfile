@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-# Ã‰tape 1 : compilation du frontend React avec Vite
+# Étape 1 : compilation du frontend React avec Vite
 # -----------------------------------------------------------------------------
 FROM node:20-alpine AS frontend-builder
 
@@ -9,10 +9,10 @@ COPY frontend/package*.json ./
 RUN npm install
 
 COPY frontend/ .
-RUN npm run build
+RUN npx vite build
 
 # -----------------------------------------------------------------------------
-# Ã‰tape 2 : image backend Flask + bundle frontend
+# Étape 2 : image backend Flask + bundle frontend
 # -----------------------------------------------------------------------------
 FROM python:3.11-slim AS backend
 
@@ -31,4 +31,4 @@ COPY --from=frontend-builder /app/frontend/dist ./app/static/frontend
 
 EXPOSE 8000
 
-CMD ["sh", "-c", "gunicorn app:create_app --bind 0.0.0.0:${PORT}"]
+CMD ["sh", "-c", "gunicorn app:create_app --bind 0.0.0.0:"]
