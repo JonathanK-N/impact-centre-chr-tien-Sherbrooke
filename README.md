@@ -57,29 +57,27 @@ Démarrage rapide
 - Node.js 18+ / npm
 - SQLite (intégré)
 
-### Backend (API)
+### Construction du frontend + backend
 
 ```bash
-cd backend
+# 1. Installer les dépendances frontend et construire le bundle
+cd frontend
+npm install
+npm run build           # génère le SPA dans backend/app/static/frontend
+
+# 2. Initialiser l'API (exécuter depuis backend/)
+cd ../backend
 python -m venv .venv
 source .venv/bin/activate  # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
-flask db upgrade
-flask seed-db
-flask run
+flask --app app db upgrade
+flask --app app seed-db    # optionnel : données de démo
+flask --app app run        # une seule commande pour servir API + SPA
 ```
 
 L’API écoute sur `http://localhost:5000`.
 
-### Frontend (SPA)
-
-```bash
-cd frontend
-npm install
-npm run dev -- --host
-```
-
-L’interface est disponible sur `http://localhost:5173` et proxy automatiquement les appels `/api` vers le backend.
+> 💡 En développement frontend pur, tu peux encore utiliser `npm run dev -- --host` dans `frontend/`, mais le backend servira toujours la dernière version compilée. Relance `npm run build` après tes changements pour les voir sur `http://localhost:5000`.
 
 Backend Flask
 -------------
@@ -157,3 +155,19 @@ Notes finales
 - Compte admin par défaut (seed) : `admin@impact-sherbrooke.ca` / `Impact123!`
 - En dev, la base SQLite est située dans `backend/instance/impact.db`.
 - Adapter les variables d’environnement (`backend/.env.example`) avant déploiement (secrets, tokens Stripe/PayPal, etc.).
+
+Déploiement sur Railway
+-----------------------
+
+Les fichiers `railway.toml` et `Procfile` préparent un déploiement automatique (builder Nixpacks).
+
+1. **Variables d’environnement** à définir dans Railway :
+   - `SECRET_KEY`
+   - `JWT_SECRET_KEY`
+   - `DATABASE_URL` (laisser vide pour SQLite embarqué ou pointer vers Postgres/MySQL)
+2. Railway exécutera automatiquement :
+   - `pip install -r backend/requirements.txt`
+   - `npm install --prefix frontend`
+   - `npm run build --prefix frontend` (le bundle est copié dans `backend/app/static/frontend`)
+   - `gunicorn app:create_app --chdir backend --bind 0.0.0.0:$PORT`
+3. Santé : l’endpoint `https://<ton-app>.railway.app/api/docs` peut servir de healthcheck rapide.

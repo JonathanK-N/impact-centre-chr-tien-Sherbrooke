@@ -3,9 +3,10 @@
 from __future__ import annotations
 
 import logging
+from pathlib import Path
 from logging.config import dictConfig
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, send_from_directory, abort
 
 from .config import get_config
 from .extensions import init_extensions, db
@@ -22,6 +23,7 @@ def create_app(config_object=None):
     register_shellcontext(app)
     register_cli(app)
     register_error_handlers(app)
+    register_spa_routes(app)
 
     return app
 
@@ -124,3 +126,33 @@ def register_error_handlers(app):
     def internal_error(error):
         logging.exception("Internal server error: %s", error)
         return jsonify({"message": "Internal server error"}), 500
+
+
+def register_spa_routes(app):
+    """Serve the React single-page application build."""
+    dist_dir = Path(app.root_path) / "static" / "frontend"
+
+    if not dist_dir.exists():
+        app.logger.warning("Frontend build directory %s not found. Run `npm run build` inside frontend/.", dist_dir)
+
+    @app.route("/", defaults={"path": ""})
+    @app.route("/<path:path>")
+    def serve_spa(path):
+        if path.startswith("api/"):
+            abort(404)
+
+        target = dist_dir / path
+
+        if path and target.exists():
+            return send_from_directory(dist_dir, path)
+
+        index_path = dist_dir / "index.html"
+        if index_path.exists():
+            return send_from_directory(dist_dir, "index.html")
+
+        return jsonify(
+            {
+                "message": "Frontend build introuvable.",
+                "detail": "Exécutez `npm install && npm run build` dans le dossier frontend/.",
+            }
+        ), 500

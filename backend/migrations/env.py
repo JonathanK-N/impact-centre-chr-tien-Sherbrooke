@@ -1,4 +1,6 @@
 import os
+import sys
+from pathlib import Path
 from logging.config import fileConfig
 
 from alembic import context
@@ -6,8 +8,10 @@ from sqlalchemy import engine_from_config, pool
 
 from flask import Flask
 
-import sys
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+# Ajoute le dossier backend/ à PYTHONPATH pour permettre `import app`
+BASE_DIR = Path(__file__).resolve().parents[1]
+if str(BASE_DIR) not in sys.path:
+    sys.path.insert(0, str(BASE_DIR))
 
 from app import create_app
 from app.extensions import db
