@@ -5,11 +5,16 @@ FROM node:20-alpine AS frontend-builder
 
 WORKDIR /app/frontend
 
+# Install dependencies
 COPY frontend/package*.json ./
-RUN npm ci --only=production
+RUN npm install --verbose
 
+# Copy source code
 COPY frontend/ .
-RUN npm run build
+
+# Fix permissions and build
+RUN chmod -R 755 node_modules/.bin/ || true
+RUN ./node_modules/.bin/vite build || npx vite build
 
 # -----------------------------------------------------------------------------
 # �tape 2 : image backend Flask + bundle frontend
