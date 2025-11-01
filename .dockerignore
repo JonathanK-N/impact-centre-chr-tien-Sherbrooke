@@ -1,7 +1,0 @@
-node_modules
-.git
-.env
-*.log
-.DS_Store
-# Ne pas ignorer dist - on en a besoin !
-# !frontend/dist
