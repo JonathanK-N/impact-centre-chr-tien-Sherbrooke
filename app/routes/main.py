@@ -13,26 +13,34 @@ main_bp = Blueprint('main', __name__)
 
 @main_bp.route('/health')
 def health():
-    return {'status': 'ok'}, 200
+    return 'OK', 200
 
 @main_bp.route('/')
 def index():
     if current_user.is_authenticated:
         return redirect(url_for('main.dashboard'))
     
-    # Statistiques publiques
+    # Statistiques par défaut
     stats = {
-        'members': User.query.filter_by(is_active=True).count(),
-        'departments': Department.query.filter_by(is_active=True).count(),
-        'families': FamilyImpact.query.filter_by(is_active=True).count(),
-        'events': Event.query.filter_by(is_active=True).count()
+        'members': 0,
+        'departments': 0,
+        'families': 0,
+        'events': 0
     }
     
-    # Annonces publiques récentes
-    public_announcements = Announcement.query.filter_by(
-        announcement_type='General',
-        is_active=True
-    ).order_by(desc(Announcement.created_at)).limit(3).all()
+    try:
+        stats = {
+            'members': User.query.filter_by(is_active=True).count(),
+            'departments': Department.query.filter_by(is_active=True).count(),
+            'families': FamilyImpact.query.filter_by(is_active=True).count(),
+            'events': Event.query.filter_by(is_active=True).count()
+        }
+        public_announcements = Announcement.query.filter_by(
+            announcement_type='General',
+            is_active=True
+        ).order_by(desc(Announcement.created_at)).limit(3).all()
+    except:
+        public_announcements = []
     
     return render_template('main/index.html', stats=stats, announcements=public_announcements)
 
