@@ -4,7 +4,7 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "python init_app.py && gunicorn --bind 0.0.0.0:$PORT --timeout 120 app:app",
+    "startCommand": "gunicorn --bind 0.0.0.0:$PORT start:app",
     "healthcheckPath": "/health",
     "healthcheckTimeout": 300,
     "restartPolicyType": "ON_FAILURE",
