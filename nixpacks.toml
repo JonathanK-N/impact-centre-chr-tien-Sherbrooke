@@ -1,11 +1,2 @@
-[phases.setup]
-nixPkgs = ["python39"]
-
-[phases.install]
-cmds = ["pip install -r requirements.txt"]
-
-[phases.build]
-cmds = ["python init_app.py"]
-
 [start]
-cmd = "gunicorn --bind 0.0.0.0:$PORT app:app"
+cmd = "python init_app.py && gunicorn --bind 0.0.0.0:$PORT --timeout 120 app:app"

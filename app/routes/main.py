@@ -11,6 +11,10 @@ from app.models.donation import Donation
 
 main_bp = Blueprint('main', __name__)
 
+@main_bp.route('/health')
+def health():
+    return {'status': 'ok'}, 200
+
 @main_bp.route('/')
 def index():
     if current_user.is_authenticated:
