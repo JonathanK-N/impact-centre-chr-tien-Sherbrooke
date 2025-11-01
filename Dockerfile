@@ -7,6 +7,11 @@ RUN pip install -r requirements.txt
 
 COPY backend/ .
 
+# Debug: vérifier la structure
+RUN find . -name "frontend" -type d
+RUN ls -la ./app/static/frontend/ || echo "Dossier frontend non trouvé"
+RUN ls -la ./app/static/frontend/index.html || echo "index.html non trouvé"
+
 RUN python init_db.py
 
 EXPOSE 8000
