@@ -30,10 +30,12 @@ def init_database():
     print("[OK] Tables créées")
     
     # Vérifier si des données existent déjà
-    if User.query.first():
-        print("[WARN] Des données existent déjà. Suppression et recréation...")
-        db.drop_all()
-        db.create_all()
+    try:
+        if User.query.first():
+            print("[INFO] Données existantes détectées, pas de recréation")
+            return
+    except:
+        print("[INFO] Première initialisation de la base de données")
     
     # Créer l'utilisateur administrateur
     admin = User(
