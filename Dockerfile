@@ -11,4 +11,4 @@ RUN python init_db.py
 
 EXPOSE 8000
 
-CMD python wsgi.py
+CMD python start.py

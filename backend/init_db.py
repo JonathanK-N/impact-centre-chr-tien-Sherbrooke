@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Initialize database for production deployment."""
 
 import os
