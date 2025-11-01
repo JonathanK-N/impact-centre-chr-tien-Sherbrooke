@@ -7,9 +7,6 @@ RUN pip install -r requirements.txt
 
 COPY backend/ .
 
-# Copier le frontend buildé
-COPY frontend/dist/ ./app/static/frontend/
-
 RUN python init_db.py
 
 EXPOSE 8000
