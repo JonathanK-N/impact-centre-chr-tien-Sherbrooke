@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.11
 
 WORKDIR /app
 
@@ -11,4 +11,4 @@ RUN python init_db.py
 
 EXPOSE 8000
 
-CMD python start.py
+ENTRYPOINT ["python", "-c", "from app import create_app; app = create_app(); app.run(host='0.0.0.0', port=8000)"]
