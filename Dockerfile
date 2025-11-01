@@ -1,7 +1,7 @@
 # -----------------------------------------------------------------------------
 # �tape 1 : compilation du frontend React avec Vite
 # -----------------------------------------------------------------------------
-FROM node:20-alpine AS frontend-builder
+FROM node:20 AS frontend-builder
 
 WORKDIR /app/frontend
 
@@ -9,7 +9,8 @@ COPY frontend/package*.json ./
 RUN npm install
 
 COPY frontend/ .
-RUN npm run build
+RUN chmod +x node_modules/.bin/vite
+RUN npx vite build
 RUN ls -la dist/ || (echo "Build failed - dist directory not found" && exit 1)
 
 # -----------------------------------------------------------------------------
