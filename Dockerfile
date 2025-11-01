@@ -1,5 +1,2 @@
-FROM nginx:alpine
-
-COPY index.html /usr/share/nginx/html/
-
-EXPOSE 80
+FROM httpd:alpine
+COPY index.html /usr/local/apache2/htdocs/
