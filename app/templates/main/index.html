@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% block title %}Accueil - Impact Centre Chrétien Sherbrooke{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="bg-primary text-white py-5 mb-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-3">
+                    Bienvenue à Impact Centre Chrétien Sherbrooke
+                </h1>
+                <p class="lead mb-4">
+                    Une communauté de foi, d'espoir et d'amour où chacun peut grandir spirituellement 
+                    et faire une différence dans sa communauté.
+                </p>
+                <div class="d-flex gap-3">
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-light btn-lg">
+                        <i class="bi bi-person-plus me-2"></i>
+                        Nous rejoindre
+                    </a>
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-outline-light btn-lg">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>
+                        Se connecter
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center">
+                <i class="bi bi-house-heart-fill" style="font-size: 12rem; opacity: 0.3;"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Stats Section -->
+<div class="container mb-5">
+    <div class="row g-4">
+        <div class="col-md-3">
+            <div class="card text-center border-0 shadow-sm">
+                <div class="card-body">
+                    <i class="bi bi-people-fill text-primary mb-3" style="font-size: 3rem;"></i>
+                    <h3 class="fw-bold text-primary">{{ stats.members }}</h3>
+                    <p class="text-muted mb-0">Membres actifs</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center border-0 shadow-sm">
+                <div class="card-body">
+                    <i class="bi bi-building text-success mb-3" style="font-size: 3rem;"></i>
+                    <h3 class="fw-bold text-success">{{ stats.departments }}</h3>
+                    <p class="text-muted mb-0">Départements</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center border-0 shadow-sm">
+                <div class="card-body">
+                    <i class="bi bi-house-door-fill text-warning mb-3" style="font-size: 3rem;"></i>
+                    <h3 class="fw-bold text-warning">{{ stats.families }}</h3>
+                    <p class="text-muted mb-0">Familles d'Impact</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center border-0 shadow-sm">
+                <div class="card-body">
+                    <i class="bi bi-calendar-event-fill text-info mb-3" style="font-size: 3rem;"></i>
+                    <h3 class="fw-bold text-info">{{ stats.events }}</h3>
+                    <p class="text-muted mb-0">Événements</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Announcements Section -->
+{% if announcements %}
+<div class="container mb-5">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-4">
+                <i class="bi bi-megaphone me-2"></i>
+                Dernières annonces
+            </h2>
+            <div class="row g-4">
+                {% for announcement in announcements %}
+                <div class="col-md-4">
+                    <div class="card h-100 announcement-card priority-{{ announcement.priority.lower() }}">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <span class="badge bg-{{ 'danger' if announcement.priority == 'Urgent' else 'warning' if announcement.priority == 'High' else 'primary' }}">
+                                    {{ announcement.priority }}
+                                </span>
+                                <small class="text-muted">{{ announcement.created_at.strftime('%d/%m/%Y') }}</small>
+                            </div>
+                            <h5 class="card-title">{{ announcement.title }}</h5>
+                            <p class="card-text">{{ announcement.content[:100] }}{% if announcement.content|length > 100 %}...{% endif %}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Features Section -->
+<div class="bg-light py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-5">
+                <h2 class="fw-bold">Ce que nous offrons</h2>
+                <p class="lead text-muted">Découvrez les différentes façons de vous impliquer dans notre communauté</p>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <i class="bi bi-people-fill text-primary mb-3" style="font-size: 3rem;"></i>
+                        <h4>Départements</h4>
+                        <p class="text-muted">
+                            Rejoignez nos différents départements selon vos talents et passions : 
+                            louange, intercession, jeunesse, et bien plus.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <i class="bi bi-house-door-fill text-success mb-3" style="font-size: 3rem;"></i>
+                        <h4>Familles d'Impact</h4>
+                        <p class="text-muted">
+                            Participez à nos groupes de maison pour approfondir votre foi 
+                            dans un cadre convivial et familial.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <i class="bi bi-calendar-event-fill text-warning mb-3" style="font-size: 3rem;"></i>
+                        <h4>Événements</h4>
+                        <p class="text-muted">
+                            Participez à nos cultes, conférences, retraites et activités 
+                            communautaires tout au long de l'année.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Call to Action -->
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12 text-center">
+            <h2 class="fw-bold mb-3">Prêt à nous rejoindre ?</h2>
+            <p class="lead text-muted mb-4">
+                Faites le premier pas vers une communauté qui vous accueillera à bras ouverts.
+            </p>
+            <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg">
+                <i class="bi bi-person-plus me-2"></i>
+                Créer mon compte
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
