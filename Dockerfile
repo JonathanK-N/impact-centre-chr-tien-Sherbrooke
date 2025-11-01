@@ -31,7 +31,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY backend/ .
 COPY --from=frontend-builder /app/frontend/dist ./app/static/frontend
 
+# Initialize database
+RUN python init_db.py
+
 EXPOSE 8000
 
-CMD ["sh", "-c", "gunicorn 'app:create_app()' --bind 0.0.0.0:${PORT:-8000}"]
+CMD ["gunicorn", "app:create_app()", "--bind", "0.0.0.0:8000"]
 
