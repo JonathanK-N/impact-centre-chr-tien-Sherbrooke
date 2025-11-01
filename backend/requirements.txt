@@ -11,4 +11,3 @@ marshmallow-sqlalchemy==1.1.0
 alembic==1.13.2
 python-dotenv==1.0.1
 gunicorn==21.2.0
-gunicorn==21.2.0

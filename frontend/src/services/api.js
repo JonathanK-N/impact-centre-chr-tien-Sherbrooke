@@ -2,9 +2,10 @@ import axios from "axios";
 import create from "zustand";
 
 const apiBase = import.meta.env.VITE_API_BASE || "/api";
+const normalizedBase = apiBase.endsWith("/") ? apiBase.slice(0, -1) : apiBase;
 
 const api = axios.create({
-  baseURL: apiBase
+  baseURL: normalizedBase
 });
 
 let interceptorsAttached = false;
@@ -25,7 +26,7 @@ export function attachInterceptors(accessToken, refreshToken, onLogout) {
   api.interceptors.request.use((config) => {
     const { accessToken: currentAccess } = useApiStore.getState();
     if (currentAccess) {
-      config.headers.Authorization = `Bearer ${currentAccess}`;
+      config.headers.Authorization = "Bearer " + currentAccess;
     }
     return config;
   });
@@ -36,13 +37,13 @@ export function attachInterceptors(accessToken, refreshToken, onLogout) {
       const { refreshToken: storeRefresh } = useApiStore.getState();
       if (error.response?.status === 401 && storeRefresh) {
         try {
-          const refreshUrl = `${apiBase.replace(/\/$/, "")}/auth/refresh`;
+          const refreshUrl = normalizedBase + "/auth/refresh";
           const refreshResponse = await axios.post(refreshUrl, null, {
-            headers: { Authorization: `Bearer ${storeRefresh}` }
+            headers: { Authorization: "Bearer " + storeRefresh }
           });
           const newAccess = refreshResponse.data.access_token;
           useApiStore.getState().setTokens(newAccess, storeRefresh);
-          error.config.headers.Authorization = `Bearer ${newAccess}`;
+          error.config.headers.Authorization = "Bearer " + newAccess;
           return api.request(error.config);
         } catch (refreshError) {
           if (onLogout) onLogout();
