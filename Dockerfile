@@ -1,11 +1,5 @@
-FROM ubuntu:22.04
+FROM nginx:alpine
 
-RUN apt-get update && apt-get install -y python3 && rm -rf /var/lib/apt/lists/*
+COPY index.html /usr/share/nginx/html/
 
-WORKDIR /app
-
-COPY index.html .
-
-EXPOSE 8000
-
-CMD ["python3", "-m", "http.server", "8000", "--bind", "0.0.0.0"]
+EXPOSE 80
