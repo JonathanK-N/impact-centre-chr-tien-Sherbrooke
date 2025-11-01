@@ -1,17 +1,13 @@
-# Dockerfile ultra-simple - backend seulement
+# Dockerfile ultra-simple - backend avec frontend intégré
 FROM python:3.11-slim
 
 WORKDIR /app
 
-# Backend
+# Backend avec frontend déjà intégré
 COPY backend/requirements.txt .
 RUN pip install -r requirements.txt gunicorn
 
 COPY backend/ .
-
-# Frontend pré-buildé (copie locale)
-RUN mkdir -p ./app/static/frontend
-COPY frontend/dist/ ./app/static/frontend/
 
 # Init DB et démarrage
 RUN python init_db.py
