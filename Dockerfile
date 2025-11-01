@@ -10,6 +10,7 @@ RUN pip install -r requirements.txt gunicorn
 COPY backend/ .
 
 # Frontend pré-buildé (copie locale)
+RUN mkdir -p ./app/static/frontend
 COPY frontend/dist/ ./app/static/frontend/
 
 # Init DB et démarrage
