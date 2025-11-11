@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_required, current_user
 from sqlalchemy import desc
 from app import db
@@ -14,6 +14,57 @@ main_bp = Blueprint('main', __name__)
 @main_bp.route('/health')
 def health():
     return 'OK', 200
+
+@main_bp.route('/api/notifications')
+def notifications_api():
+    """Retourne les notifications pertinentes pour le header."""
+    if not current_user.is_authenticated:
+        return jsonify({'notifications': [], 'unread': 0})
+    
+    try:
+        user_departments = [dm.department_id for dm in current_user.department_memberships if dm.is_active]
+        user_family = db.session.query(FamilyImpact).join(FamilyMember).filter(
+            FamilyMember.user_id == current_user.id,
+            FamilyMember.is_active == True
+        ).first()
+        user_family_id = user_family.id if user_family else None
+        
+        visibility_clauses = [Announcement.announcement_type == 'General']
+        if user_departments:
+            visibility_clauses.append(
+                db.and_(
+                    Announcement.announcement_type == 'Department',
+                    Announcement.target_department_id.in_(user_departments)
+                )
+            )
+        if user_family_id:
+            visibility_clauses.append(
+                db.and_(
+                    Announcement.announcement_type == 'Family',
+                    Announcement.target_family_id == user_family_id
+                )
+            )
+        
+        announcements = Announcement.query.filter(
+            db.or_(*visibility_clauses),
+            Announcement.is_active == True
+        ).order_by(desc(Announcement.is_pinned), desc(Announcement.created_at)).limit(5).all()
+        
+        notification_items = [{
+            'id': ann.id,
+            'title': ann.title,
+            'priority': ann.priority,
+            'type': ann.announcement_type,
+            'created_at': ann.created_at.isoformat(),
+            'is_pinned': ann.is_pinned
+        } for ann in announcements]
+        
+        unread = sum(1 for ann in notification_items if ann['priority'] in ('High', 'Urgent'))
+    except Exception:
+        notification_items = []
+        unread = 0
+    
+    return jsonify({'notifications': notification_items, 'unread': unread})
 
 @main_bp.route('/')
 def index():
@@ -128,3 +179,61 @@ def edit_profile():
         return redirect(url_for('main.profile'))
     
     return render_template('main/edit_profile.html', user=current_user)
+
+@main_bp.route('/formations')
+def formations():
+    pcnc_modules = [
+        {
+            'code': 'PCNC-001',
+            'title': 'Découvrir la vision ICC',
+            'duration': '12 min',
+            'badge': 'Fondation',
+            'video_id': 'dQw4w9WgXcQ'
+        },
+        {
+            'code': 'PCNC-101',
+            'title': 'Identité en Christ',
+            'duration': '18 min',
+            'badge': 'Croissance',
+            'video_id': 'kXYiU_JCYtU'
+        },
+        {
+            'code': 'PCNC-201',
+            'title': 'Leadership serviteur',
+            'duration': '22 min',
+            'badge': 'Leadership',
+            'video_id': '3JZ_D3ELwOQ'
+        },
+        {
+            'code': 'PCNC-RTT',
+            'title': 'Retour aux fondements',
+            'duration': '15 min',
+            'badge': 'Retraite',
+            'video_id': 'YQHsXMglC9A'
+        },
+    ]
+    
+    tracks = {
+        'bapteme': {
+            'title': 'Parcours Baptême',
+            'description': 'Préparez-vous au baptême d’eau grâce à des capsules simples et des fiches pratiques.',
+            'items': [
+                'Session 1 · Pourquoi le baptême chrétien ?',
+                'Session 2 · Engagement et témoignage',
+                'Session 3 · Atelier questions/réponses'
+            ]
+        },
+        'ateliers': {
+            'title': 'Ateliers pratiques',
+            'description': 'Capsules vidéo animées par les équipes ICC (communication, accueil, louange…).',
+            'items': [
+                'Atelier Accueil & Hospitalité',
+                'Atelier Communication & PC',
+                'Atelier Louange & Technique'
+            ]
+        }
+    }
+    
+    return render_template('main/formations.html',
+                           pcnc_modules=pcnc_modules,
+                           tracks=tracks)

@@ -2,6 +2,10 @@
 
 {% block title %}Familles d'Impact - Impact Centre Chrétien Sherbrooke{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+{% endblock %}
+
 {% block content %}
 <div class="container">
     <div class="row mb-4">
@@ -14,9 +18,9 @@
                     </h1>
                     <p class="text-muted mb-0">Rejoignez un groupe de maison près de chez vous</p>
                 </div>
-                <a href="{{ url_for('families.map') }}" class="btn btn-outline-primary">
+                <a href="#familyMapSection" class="btn btn-outline-primary">
                     <i class="bi bi-map me-2"></i>
-                    Voir la carte
+                    Carte interactive
                 </a>
             </div>
         </div>
@@ -34,6 +38,103 @@
         </div>
     </div>
     {% endif %}
+
+    <div id="familyMapSection" class="row g-4 mb-5 align-items-stretch">
+        <div class="col-lg-7">
+            <div class="card h-100 map-card">
+                <div class="card-body p-0">
+                    <div id="impactMap" class="leaflet-map"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="card h-100 map-panel">
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <p class="text-uppercase text-muted small mb-1">Trouver ma famille</p>
+                            <h4 class="mb-0">Carte des Familles d'Impact</h4>
+                        </div>
+                        <span class="badge bg-light text-dark" id="locationStatus">
+                            Partagez votre position
+                        </span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Mode de transport</label>
+                        <div class="d-flex flex-wrap gap-2 transport-options" role="group" aria-label="Modes de transport">
+                            <button type="button" class="btn btn-outline-primary active flex-fill" data-travel-mode="driving">
+                                <i class="bi bi-car-front-fill me-1"></i>Voiture
+                            </button>
+                            <button type="button" class="btn btn-outline-primary flex-fill" data-travel-mode="walking">
+                                <i class="bi bi-person-walking me-1"></i>À pied
+                            </button>
+                            <button type="button" class="btn btn-outline-primary flex-fill" data-travel-mode="transit">
+                                <i class="bi bi-bus-front me-1"></i>Bus
+                            </button>
+                            <button type="button" class="btn btn-outline-primary flex-fill" data-travel-mode="bicycling">
+                                <i class="bi bi-bicycle me-1"></i>Vélo
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="distance-card p-3 rounded mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="text-muted small mb-1">Distance estimée</p>
+                                <h3 class="mb-0" id="distanceValue">-</h3>
+                                <small class="text-muted" id="travelSummary">
+                                    Sélectionnez une famille pour commencer
+                                </small>
+                            </div>
+                            <button class="btn btn-brand-gradient" id="directionsBtn" type="button" disabled>
+                                <i class="bi bi-signpost-2 me-1"></i>Itinéraire
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="selected-family mb-4">
+                        <h5 class="mb-1" id="selectedFamilyName">Aucune famille sélectionnée</h5>
+                        <p class="text-muted small mb-3" id="selectedFamilyAddress">
+                            Choisissez une famille sur la carte ou dans la liste pour afficher les détails.
+                        </p>
+                        <div class="d-flex flex-wrap gap-2">
+                            <button class="btn btn-outline-primary btn-sm" id="contactResponsible" type="button" disabled>
+                                <i class="bi bi-envelope me-1"></i>Contacter le référent
+                            </button>
+                            <button class="btn btn-outline-secondary btn-sm" id="familyDetailBtn" type="button" disabled>
+                                <i class="bi bi-eye me-1"></i>Voir la fiche
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="family-shortlist">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h6 class="mb-0">Familles à proximité</h6>
+                            <small class="text-muted" id="familyCount">{{ families|length }} familles</small>
+                        </div>
+                        <div class="list-group family-list-compact flex-grow-1" id="familyList">
+                            {% for family in families %}
+                            <button type="button" 
+                                    class="list-group-item list-group-item-action family-item {% if loop.first %}active{% endif %}" 
+                                    data-family-id="{{ family.id }}"
+                                    data-detail-url="{{ url_for('families.detail', family_id=family.id) }}">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fw-semibold">{{ family.name }}</span>
+                                    <span class="badge bg-light text-dark family-distance">-</span>
+                                </div>
+                                <small class="text-muted d-block">{{ family.address }}</small>
+                                {% if family.responsible %}
+                                <small class="text-muted d-block">Référent : {{ family.responsible.full_name }}</small>
+                                {% endif %}
+                            </button>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="row g-4">
         {% for family in families %}
@@ -76,6 +177,18 @@
                     <div class="mb-3">
                         <i class="bi bi-person-badge me-2 text-muted"></i>
                         <small class="text-muted">Responsable: {{ family.responsible.full_name }}</small>
+                    </div>
+                    <div class="d-flex gap-2 mb-3">
+                        {% if family.responsible.email %}
+                        <a href="mailto:{{ family.responsible.email }}" class="btn btn-sm btn-outline-primary flex-fill">
+                            <i class="bi bi-envelope me-1"></i>Contacter le référent
+                        </a>
+                        {% endif %}
+                        {% if family.responsible.phone %}
+                        <a href="tel:{{ family.responsible.phone }}" class="btn btn-sm btn-outline-success">
+                            <i class="bi bi-telephone"></i>
+                        </a>
+                        {% endif %}
                     </div>
                     {% endif %}
                     
@@ -135,7 +248,7 @@
         {% endfor %}
     </div>
 
-    {% if not families %}
+{% if not families %}
     <div class="text-center py-5">
         <i class="bi bi-house-door text-muted mb-3" style="font-size: 4rem;"></i>
         <h4 class="text-muted">Aucune Famille d'Impact disponible</h4>
@@ -143,4 +256,12 @@
     </div>
     {% endif %}
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    window.familiesData = {{ families_geo | tojson }};
+</script>
+<script src="{{ url_for('static', filename='js/families-map.js') }}"></script>
 {% endblock %}

@@ -43,6 +43,8 @@ class Donation(db.Model):
     
     def generate_receipt_number(self):
         """Génère un numéro de reçu unique"""
+        if not self.donation_date:
+            self.donation_date = datetime.utcnow()
         year = self.donation_date.year
         # Format: ICCS-YYYY-XXXXXX (Impact Centre Chrétien Sherbrooke)
         count = Donation.query.filter(

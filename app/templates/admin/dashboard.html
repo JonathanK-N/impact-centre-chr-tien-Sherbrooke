@@ -1,0 +1,127 @@
+{% extends "admin/layout.html" %}
+
+{% block admin_body %}
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <p class="text-muted mb-1">Utilisateurs actifs</p>
+                <h2 class="display-6 mb-0">{{ stats.total_users }}</h2>
+                <small class="text-muted">Rôles et statuts confondus</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <p class="text-muted mb-1">Départements & Familles</p>
+                <h2 class="display-6 mb-0">{{ stats.total_departments }} / {{ stats.total_families }}</h2>
+                <small class="text-muted">Départements · Familles</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <p class="text-muted mb-1">Dons complétés</p>
+                <h2 class="display-6 mb-0">{{ stats.total_donations }}</h2>
+                <small class="text-muted">Montant cumulé : {{ '%0.2f'|format(stats.total_amount_donated) }} CAD</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Nouveaux membres</h5>
+                <span class="badge bg-light text-dark">{{ new_members|length }}</span>
+            </div>
+            <div class="card-body">
+                {% if new_members %}
+                <div class="list-group list-group-flush">
+                    {% for member in new_members %}
+                    <div class="list-group-item px-0 d-flex justify-content-between">
+                        <div>
+                            <strong>{{ member.full_name }}</strong>
+                            <div class="text-muted small">{{ member.email }}</div>
+                        </div>
+                        <small class="text-muted">{{ member.created_at.strftime('%d/%m/%Y') }}</small>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-muted mb-0">Aucun nouveau membre sur les 30 derniers jours.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Événements à venir</h5>
+                <span class="badge bg-light text-dark">{{ upcoming_events|length }}</span>
+            </div>
+            <div class="card-body">
+                {% if upcoming_events %}
+                <div class="list-group list-group-flush">
+                    {% for event in upcoming_events %}
+                    <div class="list-group-item px-0">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <strong>{{ event.title }}</strong>
+                            <small class="text-muted">{{ event.start_date.strftime('%d/%m/%Y %H:%M') }}</small>
+                        </div>
+                        <div class="text-muted small">
+                            {{ event.event_type }}{% if event.location %} · {{ event.location }}{% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-muted mb-0">Aucun événement planifié.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm mt-4">
+    <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Dons récents</h5>
+        <span class="badge bg-light text-dark">{{ recent_donations|length }}</span>
+    </div>
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Donateur</th>
+                    <th>Montant</th>
+                    <th>Type</th>
+                    <th>Statut</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for donation in recent_donations %}
+                <tr>
+                    <td>{{ donation.donation_date.strftime('%d/%m/%Y') if donation.donation_date else '-' }}</td>
+                    <td>{{ donation.user.full_name if donation.user else '—' }}</td>
+                    <td>{{ donation.formatted_amount }}</td>
+                    <td>{{ donation.donation_type }}</td>
+                    <td>
+                        <span class="badge {{ 'bg-success' if donation.payment_status == 'Completed' else 'bg-secondary' }}">
+                            {{ donation.payment_status }}
+                        </span>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center text-muted">Aucun don enregistré.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

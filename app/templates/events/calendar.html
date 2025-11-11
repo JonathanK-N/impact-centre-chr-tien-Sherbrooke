@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Calendrier des événements - Impact Centre Chrétien{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.css">
+<style>
+    #eventsCalendar {
+        background: #fff;
+        border-radius: 1.5rem;
+        padding: 1.5rem;
+        box-shadow: 0 25px 60px rgba(20, 0, 33, 0.08);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col-lg-8">
+            <h1 class="h3 mb-1">Calendrier des événements</h1>
+            <p class="text-muted mb-0">
+                Visualisez l’ensemble des rencontres ouvertes pour vous cette saison.
+            </p>
+        </div>
+        <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+            <a href="{{ url_for('events.list') }}" class="btn btn-outline-secondary">
+                <i class="bi bi-card-list me-2"></i>Vue en liste
+            </a>
+        </div>
+    </div>
+
+    <div id="eventsCalendar"></div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const calendarEl = document.getElementById('eventsCalendar');
+        const data = {{ events_data | tojson }};
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: 'fr',
+            height: 'auto',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,listWeek'
+            },
+            events: data,
+            eventClick: function(info) {
+                info.jsEvent.preventDefault();
+                if (info.event.url) {
+                    window.location.href = info.event.url;
+                }
+            }
+        });
+        calendar.render();
+    });
+</script>
+{% endblock %}

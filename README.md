@@ -109,6 +109,7 @@ Une application web complète développée avec Flask pour gérer la vie communa
    ```bash
    flask init-db
    ```
+   > Besoin d'un aperçu complet ? [python seed/seed.py](seed/seed.py) pour avoir accès à plus de détails sur les données générées.
 
 8. **Lancer l'application**
    ```bash

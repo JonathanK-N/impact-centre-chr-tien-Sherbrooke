@@ -5,6 +5,7 @@ from app import db
 from app.models.event import Event, EventParticipant
 from app.models.department import DepartmentMember
 from app.models.family_impact import FamilyMember
+from app.models.user import User
 
 events_bp = Blueprint('events', __name__)
 

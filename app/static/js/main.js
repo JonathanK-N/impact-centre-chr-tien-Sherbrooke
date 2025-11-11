@@ -48,17 +48,34 @@ document.addEventListener('DOMContentLoaded', function() {
     // Loading states for buttons
     var loadingButtons = document.querySelectorAll('[data-loading-text]');
     loadingButtons.forEach(function(button) {
+        button.dataset.originalHtml = button.innerHTML;
+        
         button.addEventListener('click', function() {
-            var originalText = button.innerHTML;
-            var loadingText = button.getAttribute('data-loading-text');
-            button.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>' + loadingText;
-            button.disabled = true;
+            var form = button.closest('form');
+            if (form && !form.checkValidity()) {
+                return;
+            }
+            if (button.dataset.isLoading === 'true') {
+                return;
+            }
             
-            // Re-enable after 3 seconds (fallback)
+            var loadingText = button.getAttribute('data-loading-text') || 'Chargement...';
+            button.dataset.isLoading = 'true';
+            button.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>' + loadingText;
+            
+            // Defer disabling so the browser can finish submitting the form
             setTimeout(function() {
-                button.innerHTML = originalText;
-                button.disabled = false;
-            }, 3000);
+                button.disabled = true;
+            }, 0);
+            
+            // Re-enable after 4 seconds if nothing happened (fallback for AJAX forms)
+            setTimeout(function() {
+                if (button.dataset.isLoading === 'true') {
+                    button.innerHTML = button.dataset.originalHtml;
+                    button.disabled = false;
+                    button.dataset.isLoading = 'false';
+                }
+            }, 4000);
         });
     });
 });

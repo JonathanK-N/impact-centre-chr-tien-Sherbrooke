@@ -1,0 +1,36 @@
+{% extends "admin/layout.html" %}
+
+{% block admin_body %}
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-transparent">
+        <h2 class="h5 mb-0">Nouveau département</h2>
+    </div>
+    <div class="card-body">
+        <form method="post" class="row g-4">
+            <div class="col-md-6">
+                <label class="form-label">Nom *</label>
+                <input type="text" name="name" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Responsable</label>
+                <select class="form-select" name="responsible_id">
+                    <option value="">Non assigné</option>
+                    {% for user in potential_responsibles %}
+                    <option value="{{ user.id }}">{{ user.full_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-12">
+                <label class="form-label">Description</label>
+                <textarea class="form-control" name="description" rows=4 placeholder="Objectifs et mission"></textarea>
+            </div>
+            <div class="col-12 d-flex justify-content-end gap-2">
+                <a href="{{ url_for('admin.departments') }}" class="btn btn-outline-secondary">Annuler</a>
+                <button type="submit" class="btn btn-brand-gradient">
+                    <i class="bi bi-check2-circle me-1"></i>Créer
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Résumé annuel {{ summary.year }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1">Résumé annuel {{ summary.year }}</h1>
+            <p class="text-muted mb-0">Synthèse de vos contributions complétées.</p>
+        </div>
+        <a href="{{ url_for('donations.history') }}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-2"></i>Retour à l’historique
+        </a>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Montant total</p>
+                    <h2 class="h3 mb-0">{{ '%0.2f'|format(summary.total_amount) }} CAD</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Nombre de dons</p>
+                    <h2 class="h3 mb-0">{{ summary.donations_count }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Période</p>
+                    <h2 class="h6 mb-0">
+                        Du {{ summary.first_donation.strftime('%d/%m/%Y') }}<br>
+                        au {{ summary.last_donation.strftime('%d/%m/%Y') }}
+                    </h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-transparent">
+                    <h5 class="mb-0">Par mois</h5>
+                </div>
+                <div class="card-body">
+                    {% if summary.donations_by_month %}
+                    <ul class="list-group list-group-flush">
+                        {% for month, amount in summary.donations_by_month.items() %}
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>{{ month }}</span>
+                            <strong>{{ '%0.2f'|format(amount) }} CAD</strong>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p class="text-muted mb-0">Aucune donnée disponible.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-transparent">
+                    <h5 class="mb-0">Par type</h5>
+                </div>
+                <div class="card-body">
+                    {% if summary.donations_by_type %}
+                    <ul class="list-group list-group-flush">
+                        {% for type, amount in summary.donations_by_type.items() %}
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>{{ type }}</span>
+                            <strong>{{ '%0.2f'|format(amount) }} CAD</strong>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p class="text-muted mb-0">Aucune donnée disponible.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

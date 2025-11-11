@@ -39,7 +39,7 @@ def list():
             'id': 1,
             'title': 'Podcast - La Foi au Quotidien #12',
             'description': 'Comment vivre sa foi dans le monde professionnel.',
-            'file_url': '/static/audio/podcast-12.mp3',  # Exemple
+            'file_url': 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
             'duration': '28:45',
             'date': '2024-01-12',
             'speaker': 'Équipe Pastorale',
@@ -62,7 +62,7 @@ def list():
             'id': 1,
             'title': 'Guide de Lecture Biblique 2024',
             'description': 'Plan de lecture de la Bible pour toute l\'année.',
-            'file_url': '/static/documents/guide-lecture-2024.pdf',
+            'file_url': 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
             'size': '2.3 MB',
             'date': '2024-01-01',
             'category': 'Guide'
@@ -71,7 +71,7 @@ def list():
             'id': 2,
             'title': 'Bulletin d\'Information - Janvier 2024',
             'description': 'Toutes les nouvelles de notre communauté.',
-            'file_url': '/static/documents/bulletin-janvier-2024.pdf',
+            'file_url': 'https://www.africau.edu/images/default/sample.pdf',
             'size': '1.8 MB',
             'date': '2024-01-15',
             'category': 'Bulletin'

@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}Historique des dons{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1">Mes dons</h1>
+            <p class="text-muted mb-0">Suivez vos contributions et téléchargez vos reçus fiscaux.</p>
+        </div>
+        <div class="d-flex gap-2 mt-3 mt-md-0">
+            <a href="{{ url_for('donations.donate') }}" class="btn btn-brand-gradient">
+                <i class="bi bi-heart-fill me-2"></i>Faire un don
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Montant total donné</p>
+                    <h2 class="h3 mb-0">{{ '%0.2f'|format(stats.total_donated) }} CAD</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Nombre de dons</p>
+                    <h2 class="h3 mb-0">{{ stats.donations_count }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Principaux types</p>
+                    {% if stats.donations_by_type %}
+                        {% for type, amount in stats.donations_by_type.items() %}
+                        <div class="d-flex justify-content-between">
+                            <span>{{ type }}</span>
+                            <span>{{ '%0.2f'|format(amount) }} CAD</span>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted mb-0">Aucune donnée</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
+            <h2 class="h5 mb-0">Historique</h2>
+        </div>
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Montant</th>
+                        <th>Type</th>
+                        <th>Statut</th>
+                        <th>Reçu</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for donation in donations %}
+                    <tr>
+                        <td>{{ donation.donation_date.strftime('%d/%m/%Y') if donation.donation_date else '-' }}</td>
+                        <td>{{ donation.formatted_amount }}</td>
+                        <td>{{ donation.donation_type }}</td>
+                        <td>
+                            <span class="badge {{ 'bg-success' if donation.payment_status == 'Completed' else 'bg-secondary' }}">
+                                {{ donation.payment_status }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if donation.payment_status == 'Completed' %}
+                            <a href="{{ url_for('donations.receipt', donation_id=donation.id) }}" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-download me-1"></i>Reçu
+                            </a>
+                            {% else %}
+                            <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-4">
+                            Aucun don enregistré pour l’instant.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

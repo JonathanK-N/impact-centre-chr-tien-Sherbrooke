@@ -35,9 +35,9 @@ def detail(department_id):
     ).all()
     
     # Annonces du département
-    announcements = department.announcements.filter_by(is_active=True).order_by(
-        db.desc(department.announcements.property.mapper.class_.created_at)
-    ).limit(5).all()
+    announcements = [ann for ann in department.announcements if ann.is_active]
+    announcements.sort(key=lambda ann: (getattr(ann, 'is_pinned', False), ann.created_at), reverse=True)
+    announcements = announcements[:5]
     
     return render_template('departments/detail.html',
                          department=department,

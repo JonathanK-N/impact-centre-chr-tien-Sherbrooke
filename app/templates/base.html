@@ -16,10 +16,10 @@
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav class="navbar navbar-expand-lg navbar-dark icc-navbar shadow-sm">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="{{ url_for('main.index') }}">
-                <i class="bi bi-house-heart-fill me-2"></i>
+            <a class="navbar-brand fw-bold d-flex align-items-center" href="{{ url_for('main.index') }}">
+                <span class="brand-mark me-2">ICC</span>
                 Impact Centre Chrétien
             </a>
             
@@ -58,6 +58,11 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('donations.donate') }}">
                                 <i class="bi bi-heart me-1"></i>Dons
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('main.formations') }}">
+                                <i class="bi bi-mortarboard me-1"></i>Formations
                             </a>
                         </li>
                     {% endif %}
@@ -100,6 +105,11 @@
                                 <i class="bi bi-person-plus me-1"></i>Inscription
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('main.formations') }}">
+                                <i class="bi bi-mortarboard me-1"></i>Formations
+                            </a>
+                        </li>
                     {% endif %}
                 </ul>
             </div>
@@ -126,7 +136,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-dark text-light py-4 mt-5">
+    <footer class="icc-footer text-light py-4 mt-5">
         <div class="container">
             <div class="row">
                 <div class="col-md-6">

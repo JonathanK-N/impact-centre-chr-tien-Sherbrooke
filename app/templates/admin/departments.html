@@ -1,0 +1,43 @@
+{% extends "admin/layout.html" %}
+
+{% block admin_body %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="h4 mb-0">Départements</h2>
+    <a href="{{ url_for('admin.create_department') }}" class="btn btn-brand-gradient">
+        <i class="bi bi-plus-circle me-1"></i>Créer un département
+    </a>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Responsable</th>
+                    <th>Membres actifs</th>
+                    <th>Statut</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for department in departments %}
+                <tr>
+                    <td>{{ department.name }}</td>
+                    <td>{{ department.responsible.full_name if department.responsible else 'Non assigné' }}</td>
+                    <td>{{ department.members|selectattr('is_active')|list|length }}</td>
+                    <td>
+                        <span class="badge {{ 'bg-success' if department.is_active else 'bg-secondary' }}">
+                            {{ 'Actif' if department.is_active else 'Inactif' }}
+                        </span>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" class="text-center text-muted py-4">Aucun département enregistré.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

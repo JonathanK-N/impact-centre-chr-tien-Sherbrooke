@@ -31,6 +31,8 @@ def donate():
             payment_status='Pending'
         )
         
+        # S'assurer d'avoir une date avant de générer le reçu
+        donation.donation_date = datetime.utcnow()
         # Générer le numéro de reçu
         donation.generate_receipt_number()
         

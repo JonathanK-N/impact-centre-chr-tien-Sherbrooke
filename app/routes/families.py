@@ -16,10 +16,34 @@ def list():
         FamilyMember.user_id == current_user.id,
         FamilyMember.is_active == True
     ).first()
+
+    # Données enrichies pour la carte Leaflet
+    families_geo = []
+    for family in families:
+        families_geo.append({
+            'id': family.id,
+            'name': family.name,
+            'description': family.description,
+            'address': family.address,
+            'detail_url': url_for('families.detail', family_id=family.id),
+            'latitude': family.latitude,
+            'longitude': family.longitude,
+            'meeting_day': family.meeting_day,
+            'meeting_time': family.meeting_time.strftime('%H:%M') if family.meeting_time else None,
+            'current_members_count': family.current_members_count,
+            'max_capacity': family.max_capacity,
+            'available_spots': family.available_spots,
+            'responsible': {
+                'name': family.responsible.full_name if family.responsible else 'Non assigné',
+                'email': family.responsible.email if family.responsible else None,
+                'phone': family.responsible.phone if family.responsible else None,
+            } if family.responsible else None
+        })
     
     return render_template('families/list.html', 
                          families=families,
-                         user_family=user_family)
+                         user_family=user_family,
+                         families_geo=families_geo)
 
 @families_bp.route('/<int:family_id>')
 @login_required
@@ -38,9 +62,9 @@ def detail(family_id):
     ).all()
     
     # Annonces de la famille
-    announcements = family.announcements.filter_by(is_active=True).order_by(
-        db.desc(family.announcements.property.mapper.class_.created_at)
-    ).limit(5).all()
+    announcements = [ann for ann in family.announcements if ann.is_active]
+    announcements.sort(key=lambda ann: (ann.is_pinned if hasattr(ann, 'is_pinned') else False, ann.created_at), reverse=True)
+    announcements = announcements[:5]
     
     return render_template('families/detail.html',
                          family=family,
