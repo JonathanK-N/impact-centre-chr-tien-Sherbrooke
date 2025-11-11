@@ -21,7 +21,7 @@ def create_app(config_name='default'):
     login_manager.login_message_category = 'info'
     
     # Import models
-    from app.models import user, department, family_impact, event, announcement, donation
+    from app.models import user, department, family_impact, event, announcement, donation, formation
     
     # Register blueprints
     from app.routes.auth import auth_bp
@@ -32,6 +32,7 @@ def create_app(config_name='default'):
     from app.routes.events import events_bp
     from app.routes.donations import donations_bp
     from app.routes.media import media_bp
+    from app.routes.formations import formations_bp
     
     app.register_blueprint(auth_bp, url_prefix='/auth')
     app.register_blueprint(main_bp)
@@ -41,6 +42,7 @@ def create_app(config_name='default'):
     app.register_blueprint(events_bp, url_prefix='/events')
     app.register_blueprint(donations_bp, url_prefix='/donations')
     app.register_blueprint(media_bp, url_prefix='/media')
+    app.register_blueprint(formations_bp, url_prefix='/formations')
     
     @login_manager.user_loader
     def load_user(user_id):

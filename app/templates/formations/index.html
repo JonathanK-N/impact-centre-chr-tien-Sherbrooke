@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+
+{% block title %}Formations ICC - Impact Centre Chrétien Sherbrooke{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Hero Section -->
+    <div class="row align-items-center mb-5">
+        <div class="col-lg-7">
+            <p class="hero-eyebrow text-uppercase text-muted mb-2">Équipe Formation</p>
+            <h1 class="display-5 fw-bold mb-3">Espace formation & capsules vidéo</h1>
+            <p class="lead text-muted mb-3">
+                Toutes les formations ICC sont disponibles en capsules vidéo et délivrent un certificat officiel
+                une fois le parcours complété. Choisissez votre parcours PCNC, préparez votre baptême ou suivez les ateliers pratiques.
+            </p>
+            <a href="#pcnc" class="btn btn-brand-gradient me-3">Découvrir PCNC</a>
+            <a href="#bapteme" class="btn btn-outline-primary">Programmes Baptême</a>
+        </div>
+        <div class="col-lg-5 text-center">
+            <img src="{{ url_for('static', filename='images/hero-impact.jpg') }}" class="img-fluid rounded-4" alt="Formations ICC">
+        </div>
+    </div>
+
+    <!-- Formations PCNC -->
+    <section id="pcnc" class="mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <p class="text-uppercase text-muted small mb-1">Parcours Certifiant Nouvelle Créature</p>
+                <h2 class="h4 mb-0">Formations PCNC</h2>
+            </div>
+            <span class="badge bg-light text-dark">{{ pcnc_formations|length }} formations</span>
+        </div>
+        
+        <div class="row g-4">
+            {% for formation in pcnc_formations %}
+            <div class="col-md-6 col-xl-3">
+                <div class="card border-0 shadow-sm h-100 formation-card" data-formation-id="{{ formation.id }}">
+                    <!-- Thumbnail avec preview vidéo -->
+                    <div class="position-relative">
+                        <img src="{{ formation.thumbnail_url or url_for('static', filename='images/formation-default.jpg') }}" 
+                             class="card-img-top" alt="{{ formation.title }}" style="height: 200px; object-fit: cover;">
+                        <div class="position-absolute top-50 start-50 translate-middle">
+                            <div class="btn btn-primary btn-lg rounded-circle">
+                                <i class="bi bi-play-fill"></i>
+                            </div>
+                        </div>
+                        {% if current_user.is_authenticated and formation.id in user_progress %}
+                        <div class="position-absolute top-0 end-0 m-2">
+                            {% set progress = user_progress[formation.id] %}
+                            {% if progress.status == 'COMPLETED' %}
+                            <span class="badge bg-success">Terminé</span>
+                            {% elif progress.status == 'IN_PROGRESS' %}
+                            <span class="badge bg-warning">{{ progress.progress_percentage }}%</span>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge bg-light text-dark">{{ formation.code }}</span>
+                            <small class="text-muted">{{ formation.duration_total }} min</small>
+                        </div>
+                        <h3 class="h5 mb-2">{{ formation.title }}</h3>
+                        <p class="text-muted flex-grow-1 small">{{ formation.description }}</p>
+                        
+                        <div class="mt-3">
+                            <a href="{{ url_for('formations.detail', formation_id=formation.id) }}" 
+                               class="btn btn-outline-primary w-100">
+                                <i class="bi bi-collection-play me-1"></i>
+                                Voir les {{ formation.modules|length }} modules
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Formation Baptême -->
+    {% if bapteme_formation %}
+    <section id="bapteme" class="mb-5">
+        <div class="card border-0 shadow-sm">
+            <div class="row g-0">
+                <div class="col-md-4">
+                    <img src="{{ bapteme_formation.thumbnail_url or url_for('static', filename='images/bapteme-formation.jpg') }}" 
+                         class="img-fluid rounded-start h-100" alt="Formation Baptême" style="object-fit: cover;">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body h-100 d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <p class="text-uppercase text-muted small mb-1">Préparation sacramentelle</p>
+                                <h2 class="h4 mb-0">{{ bapteme_formation.title }}</h2>
+                            </div>
+                            <span class="badge bg-primary">{{ bapteme_formation.modules|length }} modules</span>
+                        </div>
+                        <p class="text-muted mb-3">{{ bapteme_formation.description }}</p>
+                        
+                        <div class="row g-2 mb-3">
+                            {% for module in bapteme_formation.modules[:4] %}
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-camera-video me-2 text-primary"></i>
+                                    <small>{{ module.title }}</small>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="mt-auto">
+                            <a href="{{ url_for('formations.detail', formation_id=bapteme_formation.id) }}" 
+                               class="btn btn-primary">
+                                <i class="bi bi-play-circle me-1"></i>Commencer la formation
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Ateliers -->
+    <section id="ateliers" class="mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <p class="text-uppercase text-muted small mb-1">Ateliers pratiques</p>
+                <h2 class="h4 mb-0">Capsules vidéo spécialisées</h2>
+            </div>
+            <span class="badge bg-success">{{ ateliers|length }} ateliers</span>
+        </div>
+        
+        <div class="row g-4">
+            {% for atelier in ateliers %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="position-relative">
+                        <img src="{{ atelier.thumbnail_url or url_for('static', filename='images/atelier-default.jpg') }}" 
+                             class="card-img-top" alt="{{ atelier.title }}" style="height: 180px; object-fit: cover;">
+                        <div class="position-absolute bottom-0 start-0 m-2">
+                            <span class="badge bg-dark bg-opacity-75">{{ atelier.modules|length }} capsules</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card-body">
+                        <h3 class="h5 mb-2">{{ atelier.title }}</h3>
+                        <p class="text-muted small mb-3">{{ atelier.description }}</p>
+                        
+                        <a href="{{ url_for('formations.detail', formation_id=atelier.id) }}" 
+                           class="btn btn-outline-success w-100">
+                            <i class="bi bi-tools me-1"></i>Voir l'atelier
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+
+<style>
+.formation-card {
+    transition: transform 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+.formation-card:hover {
+    transform: translateY(-5px);
+}
+
+.btn-brand-gradient {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    color: white;
+}
+
+.btn-brand-gradient:hover {
+    background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+    color: white;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Rendre les cartes cliquables
+    document.querySelectorAll('.formation-card').forEach(card => {
+        card.addEventListener('click', function() {
+            const formationId = this.dataset.formationId;
+            window.location.href = `/formations/${formationId}`;
+        });
+    });
+});
+</script>
+{% endblock %}

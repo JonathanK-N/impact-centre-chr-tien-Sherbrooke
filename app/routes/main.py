@@ -234,6 +234,5 @@ def formations():
         }
     }
     
-    return render_template('main/formations.html',
-                           pcnc_modules=pcnc_modules,
-                           tracks=tracks)
+    # Rediriger vers le nouveau système de formations
+    return redirect(url_for('formations.index'))
