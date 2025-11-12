@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Ajouter un Module - {{ formation.title }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="bi bi-camera-video me-2"></i>
+                        Ajouter un module à "{{ formation.title }}"
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="mb-3">
+                                    <label for="title" class="form-label">Titre du module *</label>
+                                    <input type="text" class="form-control" id="title" name="title" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="order_index" class="form-label">Ordre</label>
+                                    <input type="number" class="form-control" id="order_index" name="order_index" min="1" value="1">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="2"></textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="mb-3">
+                                    <label for="video_url" class="form-label">URL de la vidéo YouTube</label>
+                                    <input type="url" class="form-control" id="video_url" name="video_url" 
+                                           placeholder="https://www.youtube.com/watch?v=VIDEO_ID">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="video_id" class="form-label">ID YouTube</label>
+                                    <input type="text" class="form-control" id="video_id" name="video_id" 
+                                           placeholder="dQw4w9WgXcQ">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="zoom_url" class="form-label">Lien de conférence Zoom</label>
+                            <input type="url" class="form-control" id="zoom_url" name="zoom_url" 
+                                   placeholder="https://zoom.us/j/123456789">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="duration" class="form-label">Durée (minutes)</label>
+                            <input type="number" class="form-control" id="duration" name="duration" min="1">
+                        </div>
+
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle me-2"></i>
+                            <strong>Options :</strong> Vous pouvez ajouter soit une vidéo YouTube, soit un lien Zoom, ou les deux.
+                            <br><strong>YouTube :</strong> Copiez la partie après "v=" dans l'URL pour l'ID.
+                            <br><strong>Zoom :</strong> Collez le lien complet de la conférence.
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('admin.edit_formation', formation_id=formation.id) }}" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left me-1"></i>Retour
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-lg me-1"></i>Ajouter le module
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

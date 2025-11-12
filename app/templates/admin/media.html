@@ -1,0 +1,64 @@
+{% extends "admin/layout.html" %}
+
+{% block admin_body %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">Médias</h2>
+    <a href="{{ url_for('admin.create_media') }}" class="btn btn-primary">
+        <i class="bi bi-plus-lg me-1"></i>Nouveau média
+    </a>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>Titre</th>
+                    <th>Type</th>
+                    <th>Auteur</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for media in media_items %}
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            {% if media.thumbnail_url %}
+                            <img src="{{ media.thumbnail_url }}" class="me-3 rounded" style="width: 60px; height: 40px; object-fit: cover;">
+                            {% endif %}
+                            <div>
+                                <strong>{{ media.title }}</strong>
+                                {% if media.description %}
+                                <br><small class="text-muted">{{ media.description[:50] }}...</small>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="badge bg-{{ 'primary' if media.media_type == 'Video' else 'success' if media.media_type == 'Audio' else 'warning' }}">
+                            {{ media.media_type }}
+                        </span>
+                    </td>
+                    <td>{{ media.author.first_name }} {{ media.author.last_name }}</td>
+                    <td class="text-muted small">{{ media.created_at.strftime('%d/%m/%Y') }}</td>
+                    <td>
+                        <a href="{{ media.url }}" target="_blank" class="btn btn-sm btn-outline-primary me-1">
+                            <i class="bi bi-eye"></i>
+                        </a>
+                        <a href="{{ url_for('admin.edit_media', media_id=media.id) }}" class="btn btn-sm btn-outline-warning">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center text-muted py-4">Aucun média enregistré.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

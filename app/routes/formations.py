@@ -8,6 +8,7 @@ from datetime import datetime
 formations_bp = Blueprint('formations', __name__, url_prefix='/formations')
 
 @formations_bp.route('/')
+@login_required
 def index():
     """Page principale des formations"""
     # Formations PCNC
@@ -43,6 +44,7 @@ def index():
                          user_progress=user_progress)
 
 @formations_bp.route('/<int:formation_id>')
+@login_required
 def detail(formation_id):
     """Page détail d'une formation avec ses modules"""
     formation = Formation.query.get_or_404(formation_id)
@@ -74,6 +76,7 @@ def detail(formation_id):
                          module_progress=module_progress)
 
 @formations_bp.route('/<int:formation_id>/module/<int:module_id>')
+@login_required
 def watch_module(formation_id, module_id):
     """Page de visionnage d'un module"""
     formation = Formation.query.get_or_404(formation_id)

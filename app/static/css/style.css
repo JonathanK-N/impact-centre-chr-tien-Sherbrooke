@@ -544,6 +544,93 @@ body {
     height: 1rem;
 }
 
+/* Feature Cards Animations */
+.feature-card-wrapper {
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.feature-card {
+    transition: all 0.3s ease;
+    border: 1px solid rgba(124, 44, 189, 0.1);
+}
+
+.feature-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 25px 50px rgba(75, 15, 106, 0.15);
+    border-color: rgba(124, 44, 189, 0.2);
+}
+
+.feature-icon {
+    font-size: 3rem;
+    transition: transform 0.3s ease;
+}
+
+.feature-card:hover .feature-icon {
+    transform: scale(1.1);
+}
+
+.feature-title {
+    color: var(--primary-color);
+    font-weight: 700;
+}
+
+.feature-cta {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover .feature-cta {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Hero Section Improvements */
+.hero-carousel-overlay {
+    background: linear-gradient(135deg, rgba(75, 15, 106, 0.9) 0%, rgba(124, 44, 189, 0.7) 50%, rgba(0, 0, 0, 0.3) 100%);
+}
+
+.display-4 {
+    font-weight: 800;
+    background: linear-gradient(135deg, #fff 0%, rgba(255, 200, 87, 0.9) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.feature-card-wrapper[data-aos="fade-up"] {
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+.btn-brand-gradient {
+    animation: pulse 2s infinite;
+}
+
+.btn-brand-gradient:hover {
+    animation: none;
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
     width: 8px;

@@ -19,17 +19,17 @@
                     <div class="container">
                         <div class="row">
                             <div class="col-lg-8">
-                                <p class="hero-eyebrow text-uppercase mb-2">
+                                <p class="hero-eyebrow text-uppercase mb-2" data-aos="fade-up" data-aos-delay="100">
                                     Impact Centre Chrétien Sherbrooke
                                 </p>
-                                <h1 class="display-4 fw-bold mb-3">
+                                <h1 class="display-4 fw-bold mb-3" data-aos="fade-up" data-aos-delay="200">
                                     Bienvenue à la maison
                                 </h1>
-                                <p class="lead mb-4">
+                                <p class="lead mb-4" data-aos="fade-up" data-aos-delay="300">
                                     Nous sommes une communauté passionnée par la présence de Dieu, 
                                     l'amour du prochain et l'impact dans la ville de Sherbrooke.
                                 </p>
-                                <div class="d-flex flex-wrap gap-3">
+                                <div class="d-flex flex-wrap gap-3" data-aos="fade-up" data-aos-delay="400">
                                     <a href="{{ url_for('auth.register') }}" class="btn btn-brand-light btn-lg">
                                         <i class="bi bi-person-plus me-2"></i>
                                         Nous rejoindre
@@ -48,47 +48,7 @@
     </div>
 </div>
 
-<!-- Stats Section -->
-<div class="container mb-5">
-    <div class="row g-4">
-        <div class="col-md-3">
-            <div class="card glass-card text-center border-0">
-                <div class="card-body">
-                    <i class="bi bi-people-fill text-primary mb-3" style="font-size: 3rem;"></i>
-                    <h3 class="fw-bold text-primary">{{ stats.members }}</h3>
-                    <p class="text-muted mb-0">Membres actifs</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card glass-card text-center border-0">
-                <div class="card-body">
-                    <i class="bi bi-building text-success mb-3" style="font-size: 3rem;"></i>
-                    <h3 class="fw-bold text-success">{{ stats.departments }}</h3>
-                    <p class="text-muted mb-0">Départements</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card glass-card text-center border-0">
-                <div class="card-body">
-                    <i class="bi bi-house-door-fill text-warning mb-3" style="font-size: 3rem;"></i>
-                    <h3 class="fw-bold text-warning">{{ stats.families }}</h3>
-                    <p class="text-muted mb-0">Familles d'Impact</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card glass-card text-center border-0">
-                <div class="card-body">
-                    <i class="bi bi-calendar-event-fill text-info mb-3" style="font-size: 3rem;"></i>
-                    <h3 class="fw-bold text-info">{{ stats.events }}</h3>
-                    <p class="text-muted mb-0">Événements</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+
 
 <!-- Announcements Section -->
 {% if announcements %}
@@ -127,56 +87,80 @@
     <div class="container">
         <div class="row">
             <div class="col-12 text-center mb-5">
-                <a href="{{ url_for('families.list') }}" class="vision-link d-inline-block">
-                    <p class="hero-eyebrow text-uppercase text-muted mb-2">Au cœur de notre vision</p>
-                    <h2 class="fw-bold section-title mb-2">Ce que nous offrons</h2>
-                    <p class="lead text-muted section-subtitle mb-3">Découvrez les différentes façons de vous impliquer dans notre communauté</p>
-                    <span class="vision-cta">Explorer les Familles d'Impact <i class="bi bi-arrow-up-right ms-1"></i></span>
-                </a>
+                <p class="hero-eyebrow text-uppercase text-muted mb-2">Au cœur de notre vision</p>
+                <h2 class="fw-bold section-title mb-2">Ce que nous offrons</h2>
+                <p class="lead text-muted section-subtitle mb-3">Découvrez les différentes façons de vous impliquer dans notre communauté</p>
             </div>
         </div>
         <div class="row g-4">
             <div class="col-md-4">
-                <a href="{{ url_for('departments.list') }}" class="feature-link">
-                    <div class="card h-100 border-0 feature-card">
-                        <div class="card-body text-center p-4">
-                            <i class="bi bi-people-fill text-primary mb-3" style="font-size: 3rem;"></i>
-                            <h4>Départements</h4>
-                            <p class="text-muted">
-                                Rejoignez nos différents départements selon vos talents et passions : 
-                                louange, intercession, jeunesse, et bien plus.
-                            </p>
+                <div class="feature-card-wrapper" data-aos="fade-up" data-aos-delay="100">
+                    <a href="{{ url_for('departments.list') }}" class="feature-link text-decoration-none">
+                        <div class="card h-100 border-0 feature-card shadow-sm">
+                            <div class="card-body text-center p-4">
+                                <div class="feature-icon-wrapper mb-3">
+                                    <i class="bi bi-people-fill feature-icon text-primary"></i>
+                                </div>
+                                <h4 class="feature-title mb-3">Départements</h4>
+                                <p class="text-muted mb-3">
+                                    Rejoignez nos différents départements selon vos talents et passions : 
+                                    louange, intercession, jeunesse, et bien plus.
+                                </p>
+                                <div class="feature-cta">
+                                    <span class="btn btn-outline-primary btn-sm">
+                                        Découvrir <i class="bi bi-arrow-right ms-1"></i>
+                                    </span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </a>
+                    </a>
+                </div>
             </div>
             <div class="col-md-4">
-                <a href="{{ url_for('families.list') }}" class="feature-link">
-                    <div class="card h-100 border-0 feature-card">
-                        <div class="card-body text-center p-4">
-                            <i class="bi bi-house-door-fill text-success mb-3" style="font-size: 3rem;"></i>
-                            <h4>Familles d'Impact</h4>
-                            <p class="text-muted">
-                                Participez à nos groupes de maison pour approfondir votre foi 
-                                dans un cadre convivial et familial.
-                            </p>
+                <div class="feature-card-wrapper" data-aos="fade-up" data-aos-delay="200">
+                    <a href="{{ url_for('families.list') }}" class="feature-link text-decoration-none">
+                        <div class="card h-100 border-0 feature-card shadow-sm">
+                            <div class="card-body text-center p-4">
+                                <div class="feature-icon-wrapper mb-3">
+                                    <i class="bi bi-house-door-fill feature-icon text-success"></i>
+                                </div>
+                                <h4 class="feature-title mb-3">Familles d'Impact</h4>
+                                <p class="text-muted mb-3">
+                                    Participez à nos groupes de maison pour approfondir votre foi 
+                                    dans un cadre convivial et familial.
+                                </p>
+                                <div class="feature-cta">
+                                    <span class="btn btn-outline-success btn-sm">
+                                        Découvrir <i class="bi bi-arrow-right ms-1"></i>
+                                    </span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </a>
+                    </a>
+                </div>
             </div>
             <div class="col-md-4">
-                <a href="{{ url_for('events.list') }}" class="feature-link">
-                    <div class="card h-100 border-0 feature-card">
-                        <div class="card-body text-center p-4">
-                            <i class="bi bi-calendar-event-fill text-warning mb-3" style="font-size: 3rem;"></i>
-                            <h4>Événements</h4>
-                            <p class="text-muted">
-                                Participez à nos cultes, conférences, retraites et activités 
-                                communautaires tout au long de l'année.
-                            </p>
+                <div class="feature-card-wrapper" data-aos="fade-up" data-aos-delay="300">
+                    <a href="{{ url_for('events.list') }}" class="feature-link text-decoration-none">
+                        <div class="card h-100 border-0 feature-card shadow-sm">
+                            <div class="card-body text-center p-4">
+                                <div class="feature-icon-wrapper mb-3">
+                                    <i class="bi bi-calendar-event-fill feature-icon text-warning"></i>
+                                </div>
+                                <h4 class="feature-title mb-3">Événements</h4>
+                                <p class="text-muted mb-3">
+                                    Participez à nos cultes, conférences, retraites et activités 
+                                    communautaires tout au long de l'année.
+                                </p>
+                                <div class="feature-cta">
+                                    <span class="btn btn-outline-warning btn-sm">
+                                        Découvrir <i class="bi bi-arrow-right ms-1"></i>
+                                    </span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </a>
+                    </a>
+                </div>
             </div>
         </div>
     </div>

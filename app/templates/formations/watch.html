@@ -18,21 +18,38 @@
         <div class="col-lg-8">
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-body p-0">
+                    {% if module.video_id %}
                     <div class="ratio ratio-16x9">
-                        {% if module.video_id %}
                         <iframe id="youtube-player" 
                                 src="https://www.youtube.com/embed/{{ module.video_id }}?enablejsapi=1&rel=0&modestbranding=1" 
                                 title="{{ module.title }}" 
                                 frameborder="0" 
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                                 allowfullscreen></iframe>
-                        {% else %}
+                    </div>
+                    {% elif module.video_url %}
+                    <div class="ratio ratio-16x9">
                         <video controls class="w-100 h-100">
                             <source src="{{ module.video_url }}" type="video/mp4">
                             Votre navigateur ne supporte pas la lecture vidéo.
                         </video>
-                        {% endif %}
                     </div>
+                    {% endif %}
+                    
+                    {% if module.zoom_url %}
+                    <div class="alert alert-info mt-3 mx-3 mb-0">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-camera-video-fill text-primary me-3" style="font-size: 1.5rem;"></i>
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1">Conférence Zoom en direct</h6>
+                                <p class="mb-2 small">Ce module inclut une session interactive via Zoom.</p>
+                                <a href="{{ module.zoom_url }}" target="_blank" class="btn btn-primary btn-sm">
+                                    <i class="bi bi-box-arrow-up-right me-1"></i>Rejoindre la conférence
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
             
@@ -49,7 +66,7 @@
                         </div>
                     </div>
                     
-                    {% if current_user.is_authenticated %}
+                    {% if current_user.is_authenticated and (module.video_id or module.video_url or module.zoom_url) %}
                     <div class="d-flex gap-2">
                         <button id="complete-btn" class="btn btn-success" onclick="completeModule()">
                             <i class="bi bi-check-circle me-1"></i>Marquer comme terminé
