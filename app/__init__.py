@@ -21,7 +21,7 @@ def create_app(config_name='default'):
     login_manager.login_message_category = 'info'
     
     # Import models
-    from app.models import user, department, family_impact, event, announcement, donation, formation
+    from app.models import user, department, family_impact, event, announcement, donation, formation, media
     
     # Register blueprints
     from app.routes.auth import auth_bp

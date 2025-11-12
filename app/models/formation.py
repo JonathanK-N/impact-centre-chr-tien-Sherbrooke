@@ -10,6 +10,7 @@ class Formation(db.Model):
     category = db.Column(db.String(50), nullable=False)  # 'PCNC', 'BAPTEME', 'ATELIER'
     code = db.Column(db.String(20), unique=True)
     thumbnail_url = db.Column(db.String(500))
+    banner_image = db.Column(db.String(500))  # Chemin vers l'image uploadée
     duration_total = db.Column(db.Integer)  # en minutes
     is_active = db.Column(db.Boolean, default=True)
     order_index = db.Column(db.Integer, default=0)
@@ -27,7 +28,8 @@ class FormationModule(db.Model):
     formation_id = db.Column(db.Integer, db.ForeignKey('formations.id'), nullable=False)
     title = db.Column(db.String(200), nullable=False)
     description = db.Column(db.Text)
-    video_url = db.Column(db.String(500), nullable=False)
+    video_url = db.Column(db.String(500))
+    zoom_url = db.Column(db.String(500))  # Lien de conférence Zoom
     video_id = db.Column(db.String(50))  # YouTube video ID
     thumbnail_url = db.Column(db.String(500))
     duration = db.Column(db.Integer)  # en minutes

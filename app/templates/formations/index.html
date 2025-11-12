@@ -37,7 +37,7 @@
                 <div class="card border-0 shadow-sm h-100 formation-card" data-formation-id="{{ formation.id }}">
                     <!-- Thumbnail avec preview vidéo -->
                     <div class="position-relative">
-                        <img src="{{ formation.thumbnail_url or url_for('static', filename='images/formation-default.jpg') }}" 
+                        <img src="{{ formation.banner_image or formation.thumbnail_url or url_for('static', filename='images/formation-default.jpg') }}" 
                              class="card-img-top" alt="{{ formation.title }}" style="height: 200px; object-fit: cover;">
                         <div class="position-absolute top-50 start-50 translate-middle">
                             <div class="btn btn-primary btn-lg rounded-circle">
@@ -84,7 +84,7 @@
         <div class="card border-0 shadow-sm">
             <div class="row g-0">
                 <div class="col-md-4">
-                    <img src="{{ bapteme_formation.thumbnail_url or url_for('static', filename='images/bapteme-formation.jpg') }}" 
+                    <img src="{{ bapteme_formation.banner_image or bapteme_formation.thumbnail_url or url_for('static', filename='images/bapteme-formation.jpg') }}" 
                          class="img-fluid rounded-start h-100" alt="Formation Baptême" style="object-fit: cover;">
                 </div>
                 <div class="col-md-8">
@@ -137,7 +137,7 @@
             <div class="col-md-6 col-lg-4">
                 <div class="card border-0 shadow-sm h-100">
                     <div class="position-relative">
-                        <img src="{{ atelier.thumbnail_url or url_for('static', filename='images/atelier-default.jpg') }}" 
+                        <img src="{{ atelier.banner_image or atelier.thumbnail_url or url_for('static', filename='images/atelier-default.jpg') }}" 
                              class="card-img-top" alt="{{ atelier.title }}" style="height: 180px; object-fit: cover;">
                         <div class="position-absolute bottom-0 start-0 m-2">
                             <span class="badge bg-dark bg-opacity-75">{{ atelier.modules|length }} capsules</span>
