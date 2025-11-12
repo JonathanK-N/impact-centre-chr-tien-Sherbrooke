@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Ajouter un Média - Administration{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="bi bi-play-circle me-2"></i>
+                        Ajouter un nouveau média
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Titre du média *</label>
+                            <input type="text" class="form-control" id="title" name="title" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="media_type" class="form-label">Type de média *</label>
+                                    <select class="form-select" id="media_type" name="media_type" required>
+                                        <option value="">Sélectionner un type</option>
+                                        <option value="Video">Vidéo</option>
+                                        <option value="Audio">Audio</option>
+                                        <option value="Document">Document PDF</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="url" class="form-label">URL du média *</label>
+                                    <input type="url" class="form-control" id="url" name="url" required 
+                                           placeholder="https://youtube.com/watch?v=...">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="thumbnail_url" class="form-label">URL de la miniature</label>
+                            <input type="url" class="form-control" id="thumbnail_url" name="thumbnail_url" 
+                                   placeholder="https://img.youtube.com/vi/VIDEO_ID/maxresdefault.jpg">
+                            <div class="form-text">Pour YouTube, utilisez : https://img.youtube.com/vi/VIDEO_ID/maxresdefault.jpg</div>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('admin.media') }}" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left me-1"></i>Retour
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-lg me-1"></i>Ajouter le média
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

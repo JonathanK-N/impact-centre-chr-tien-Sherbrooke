@@ -1,0 +1,59 @@
+{% extends "admin/layout.html" %}
+
+{% block admin_body %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">Événements</h2>
+    <a href="{{ url_for('admin.create_event') }}" class="btn btn-primary">
+        <i class="bi bi-plus-lg me-1"></i>Nouvel événement
+    </a>
+</div>
+<div class="card border-0 shadow-sm">
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>Titre</th>
+                    <th>Période</th>
+                    <th>Type</th>
+                    <th>Capacité</th>
+                    <th>Statut</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for event in events %}
+                <tr>
+                    <td>{{ event.title }}</td>
+                    <td>
+                        {{ event.start_date.strftime('%d/%m/%Y %H:%M') if event.start_date else '-' }}
+                        {% if event.end_date %}
+                        <br><small class="text-muted">→ {{ event.end_date.strftime('%d/%m/%Y %H:%M') }}</small>
+                        {% endif %}
+                    </td>
+                    <td>{{ event.event_type }}</td>
+                    <td>
+                        {% if event.max_participants %}
+                        {{ event.current_participants_count }}/{{ event.max_participants }}
+                        {% else %}
+                        <span class="text-muted">Illimitée</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if event.is_cancelled %}
+                        <span class="badge bg-danger">Annulé</span>
+                        {% else %}
+                        <span class="badge {{ 'bg-success' if event.is_active else 'bg-secondary' }}">
+                            {{ 'Actif' if event.is_active else 'Inactif' }}
+                        </span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center text-muted py-4">Aucun événement enregistré.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

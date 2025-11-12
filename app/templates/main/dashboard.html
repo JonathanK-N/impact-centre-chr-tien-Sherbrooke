@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+
+{% block title %}Tableau de bord - Impact Centre Chrétien Sherbrooke{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Welcome Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h3 mb-0">Bonjour, {{ current_user.first_name }}!</h1>
+                    <p class="text-muted mb-0">Voici un aperçu de votre activité dans notre communauté</p>
+                </div>
+                <div class="text-end">
+                    <small class="text-muted">Dernière connexion: Aujourd'hui</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card stat-card text-white">
+                <div class="card-body text-center">
+                    <i class="bi bi-people-fill mb-2" style="font-size: 2rem;"></i>
+                    <div class="stat-number">{{ user_stats.departments }}</div>
+                    <div class="stat-label">Départements</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card text-white" style="background: linear-gradient(135deg, #198754, #146c43);">
+                <div class="card-body text-center">
+                    <i class="bi bi-house-door-fill mb-2" style="font-size: 2rem;"></i>
+                    <div class="stat-number">{{ user_stats.family }}</div>
+                    <div class="stat-label">Famille d'Impact</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card text-white" style="background: linear-gradient(135deg, #ffc107, #e0a800);">
+                <div class="card-body text-center">
+                    <i class="bi bi-calendar-event-fill mb-2" style="font-size: 2rem;"></i>
+                    <div class="stat-number">{{ user_stats.events }}</div>
+                    <div class="stat-label">Événements à venir</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card text-white" style="background: linear-gradient(135deg, #dc3545, #b02a37);">
+                <div class="card-body text-center">
+                    <i class="bi bi-heart-fill mb-2" style="font-size: 2rem;"></i>
+                    <div class="stat-number">{{ user_stats.donations }}</div>
+                    <div class="stat-label">Dons effectués</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Mes Départements -->
+        <div class="col-lg-6">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="bi bi-people me-2"></i>
+                        Mes Départements
+                    </h5>
+                    <a href="{{ url_for('departments.list') }}" class="btn btn-sm btn-outline-primary">
+                        Voir tous
+                    </a>
+                </div>
+                <div class="card-body">
+                    {% if user_departments %}
+                        {% for department in user_departments %}
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-primary rounded-circle p-2 me-3">
+                                <i class="bi bi-building text-white"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="mb-0">{{ department.name }}</h6>
+                                <small class="text-muted">{{ department.description[:50] }}...</small>
+                            </div>
+                            <a href="{{ url_for('departments.detail', department_id=department.id) }}" 
+                               class="btn btn-sm btn-outline-secondary">
+                                Voir
+                            </a>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="bi bi-people text-muted mb-3" style="font-size: 3rem;"></i>
+                            <p class="text-muted">Vous n'appartenez à aucun département pour le moment.</p>
+                            <a href="{{ url_for('departments.list') }}" class="btn btn-primary">
+                                Rejoindre un département
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Ma Famille d'Impact -->
+        <div class="col-lg-6">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="bi bi-house-door me-2"></i>
+                        Ma Famille d'Impact
+                    </h5>
+                    <a href="{{ url_for('families.list') }}" class="btn btn-sm btn-outline-primary">
+                        Voir toutes
+                    </a>
+                </div>
+                <div class="card-body">
+                    {% if user_family %}
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-success rounded-circle p-2 me-3">
+                                <i class="bi bi-house-door text-white"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="mb-0">{{ user_family.name }}</h6>
+                                <small class="text-muted">
+                                    <i class="bi bi-geo-alt me-1"></i>{{ user_family.address }}
+                                </small>
+                                <br>
+                                <small class="text-muted">
+                                    <i class="bi bi-clock me-1"></i>{{ user_family.meeting_day }} à {{ user_family.meeting_time.strftime('%H:%M') if user_family.meeting_time }}
+                                </small>
+                            </div>
+                        </div>
+                        <a href="{{ url_for('families.detail', family_id=user_family.id) }}" 
+                           class="btn btn-success w-100">
+                            Voir ma famille
+                        </a>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="bi bi-house-door text-muted mb-3" style="font-size: 3rem;"></i>
+                            <p class="text-muted">Vous n'appartenez à aucune Famille d'Impact.</p>
+                            <a href="{{ url_for('families.list') }}" class="btn btn-success">
+                                Rejoindre une famille
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Événements à venir -->
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="bi bi-calendar-event me-2"></i>
+                        Mes prochains événements
+                    </h5>
+                    <a href="{{ url_for('events.list') }}" class="btn btn-sm btn-outline-primary">
+                        Voir tous
+                    </a>
+                </div>
+                <div class="card-body">
+                    {% if upcoming_events %}
+                        {% for event in upcoming_events %}
+                        <div class="d-flex align-items-center mb-3 pb-3 border-bottom">
+                            <div class="event-date me-3" style="min-width: 80px;">
+                                <div class="day">{{ event.start_date.strftime('%d') }}</div>
+                                <div class="month">{{ event.start_date.strftime('%b') }}</div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1">{{ event.title }}</h6>
+                                <small class="text-muted">
+                                    <i class="bi bi-clock me-1"></i>{{ event.start_date.strftime('%H:%M') }}
+                                    {% if event.location %}
+                                    <i class="bi bi-geo-alt ms-2 me-1"></i>{{ event.location }}
+                                    {% endif %}
+                                </small>
+                            </div>
+                            <a href="{{ url_for('events.detail', event_id=event.id) }}" 
+                               class="btn btn-sm btn-outline-primary">
+                                Détails
+                            </a>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="bi bi-calendar-x text-muted mb-3" style="font-size: 3rem;"></i>
+                            <p class="text-muted">Aucun événement prévu pour le moment.</p>
+                            <a href="{{ url_for('events.list') }}" class="btn btn-primary">
+                                Découvrir les événements
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Annonces -->
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-megaphone me-2"></i>
+                        Annonces
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if announcements %}
+                        {% for announcement in announcements %}
+                        <div class="mb-3 pb-3 {% if not loop.last %}border-bottom{% endif %}">
+                            <div class="d-flex justify-content-between align-items-start mb-1">
+                                <span class="badge bg-{{ 'danger' if announcement.priority == 'Urgent' else 'warning' if announcement.priority == 'High' else 'primary' }} badge-sm">
+                                    {{ announcement.priority }}
+                                </span>
+                                <small class="text-muted">{{ announcement.created_at.strftime('%d/%m') }}</small>
+                            </div>
+                            <h6 class="mb-1">{{ announcement.title }}</h6>
+                            <p class="small text-muted mb-0">{{ announcement.content[:80] }}...</p>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="bi bi-megaphone text-muted mb-3" style="font-size: 2rem;"></i>
+                            <p class="text-muted small">Aucune annonce pour le moment.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

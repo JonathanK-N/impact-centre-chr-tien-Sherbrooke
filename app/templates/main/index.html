@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+
+{% block title %}Accueil - Impact Centre Chrétien Sherbrooke{% endblock %}
+
+{% block content %}
+<!-- Hero Carousel -->
+<div id="heroCarousel" class="carousel slide hero-carousel mb-5" data-bs-ride="carousel" data-bs-interval="8000">
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Bienvenue"></button>
+    </div>
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <div class="hero-carousel-item">
+                <img 
+                    src="{{ url_for('static', filename='images/hero-impact.jpg') }}" 
+                    class="d-block w-100 hero-carousel-image" 
+                    alt="Impact Centre Chrétien Sherbrooke">
+                <div class="hero-carousel-overlay">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <p class="hero-eyebrow text-uppercase mb-2" data-aos="fade-up" data-aos-delay="100">
+                                    Impact Centre Chrétien Sherbrooke
+                                </p>
+                                <h1 class="display-4 fw-bold mb-3" data-aos="fade-up" data-aos-delay="200">
+                                    Bienvenue à la maison
+                                </h1>
+                                <p class="lead mb-4" data-aos="fade-up" data-aos-delay="300">
+                                    Nous sommes une communauté passionnée par la présence de Dieu, 
+                                    l'amour du prochain et l'impact dans la ville de Sherbrooke.
+                                </p>
+                                <div class="d-flex flex-wrap gap-3" data-aos="fade-up" data-aos-delay="400">
+                                    <a href="{{ url_for('auth.register') }}" class="btn btn-brand-light btn-lg">
+                                        <i class="bi bi-person-plus me-2"></i>
+                                        Nous rejoindre
+                                    </a>
+                                    <a href="{{ url_for('auth.login') }}" class="btn btn-outline-brand btn-lg">
+                                        <i class="bi bi-box-arrow-in-right me-2"></i>
+                                        Se connecter
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Announcements Section -->
+{% if announcements %}
+<div class="container mb-5">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-4">
+                <i class="bi bi-megaphone me-2"></i>
+                Dernières annonces
+            </h2>
+            <div class="row g-4">
+                {% for announcement in announcements %}
+                <div class="col-md-4">
+                    <div class="card h-100 announcement-card priority-{{ announcement.priority.lower() }}">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <span class="badge bg-{{ 'danger' if announcement.priority == 'Urgent' else 'warning' if announcement.priority == 'High' else 'primary' }}">
+                                    {{ announcement.priority }}
+                                </span>
+                                <small class="text-muted">{{ announcement.created_at.strftime('%d/%m/%Y') }}</small>
+                            </div>
+                            <h5 class="card-title">{{ announcement.title }}</h5>
+                            <p class="card-text">{{ announcement.content[:100] }}{% if announcement.content|length > 100 %}...{% endif %}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Features Section -->
+<div class="section-soft py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-5">
+                <p class="hero-eyebrow text-uppercase text-muted mb-2">Au cœur de notre vision</p>
+                <h2 class="fw-bold section-title mb-2">Ce que nous offrons</h2>
+                <p class="lead text-muted section-subtitle mb-3">Découvrez les différentes façons de vous impliquer dans notre communauté</p>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card-wrapper" data-aos="fade-up" data-aos-delay="100">
+                    <a href="{{ url_for('departments.list') }}" class="feature-link text-decoration-none">
+                        <div class="card h-100 border-0 feature-card shadow-sm">
+                            <div class="card-body text-center p-4">
+                                <div class="feature-icon-wrapper mb-3">
+                                    <i class="bi bi-people-fill feature-icon text-primary"></i>
+                                </div>
+                                <h4 class="feature-title mb-3">Départements</h4>
+                                <p class="text-muted mb-3">
+                                    Rejoignez nos différents départements selon vos talents et passions : 
+                                    louange, intercession, jeunesse, et bien plus.
+                                </p>
+                                <div class="feature-cta">
+                                    <span class="btn btn-outline-primary btn-sm">
+                                        Découvrir <i class="bi bi-arrow-right ms-1"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card-wrapper" data-aos="fade-up" data-aos-delay="200">
+                    <a href="{{ url_for('families.list') }}" class="feature-link text-decoration-none">
+                        <div class="card h-100 border-0 feature-card shadow-sm">
+                            <div class="card-body text-center p-4">
+                                <div class="feature-icon-wrapper mb-3">
+                                    <i class="bi bi-house-door-fill feature-icon text-success"></i>
+                                </div>
+                                <h4 class="feature-title mb-3">Familles d'Impact</h4>
+                                <p class="text-muted mb-3">
+                                    Participez à nos groupes de maison pour approfondir votre foi 
+                                    dans un cadre convivial et familial.
+                                </p>
+                                <div class="feature-cta">
+                                    <span class="btn btn-outline-success btn-sm">
+                                        Découvrir <i class="bi bi-arrow-right ms-1"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card-wrapper" data-aos="fade-up" data-aos-delay="300">
+                    <a href="{{ url_for('events.list') }}" class="feature-link text-decoration-none">
+                        <div class="card h-100 border-0 feature-card shadow-sm">
+                            <div class="card-body text-center p-4">
+                                <div class="feature-icon-wrapper mb-3">
+                                    <i class="bi bi-calendar-event-fill feature-icon text-warning"></i>
+                                </div>
+                                <h4 class="feature-title mb-3">Événements</h4>
+                                <p class="text-muted mb-3">
+                                    Participez à nos cultes, conférences, retraites et activités 
+                                    communautaires tout au long de l'année.
+                                </p>
+                                <div class="feature-cta">
+                                    <span class="btn btn-outline-warning btn-sm">
+                                        Découvrir <i class="bi bi-arrow-right ms-1"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Call to Action -->
+<div class="container py-5">
+    <div class="callout-panel text-center">
+        <p class="hero-eyebrow text-uppercase text-muted mb-2">Commencer l'aventure</p>
+        <h2 class="fw-bold mb-3">Prêt à nous rejoindre ?</h2>
+        <p class="lead text-muted mb-4">
+            Faites le premier pas vers une communauté qui vous accueillera à bras ouverts.
+        </p>
+        <a href="{{ url_for('auth.register') }}" class="btn btn-brand-gradient btn-lg">
+            <i class="bi bi-person-plus me-2"></i>
+            Créer mon compte
+        </a>
+    </div>
+</div>
+{% endblock %}
