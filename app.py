@@ -10,13 +10,6 @@ from app.models.donation import Donation
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 
-# Initialiser la base de données au démarrage
-with app.app_context():
-    try:
-        db.create_all()
-    except Exception as e:
-        print(f"Erreur lors de l'initialisation de la base de données: {e}")
-
 @app.shell_context_processor
 def make_shell_context():
     return dict(
