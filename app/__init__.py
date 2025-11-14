@@ -28,6 +28,7 @@ def create_app(config_name='default'):
     from app.routes.main import main_bp
     from app.routes.admin import admin_bp
     from app.routes.departments import departments_bp
+    from app.routes.department import department_bp
     from app.routes.families import families_bp
     from app.routes.events import events_bp
     from app.routes.donations import donations_bp
@@ -38,6 +39,7 @@ def create_app(config_name='default'):
     app.register_blueprint(main_bp)
     app.register_blueprint(admin_bp, url_prefix='/admin')
     app.register_blueprint(departments_bp, url_prefix='/departments')
+    app.register_blueprint(department_bp, url_prefix='/department')
     app.register_blueprint(families_bp, url_prefix='/families')
     app.register_blueprint(events_bp, url_prefix='/events')
     app.register_blueprint(donations_bp, url_prefix='/donations')
