@@ -2,7 +2,9 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
     <title>{% block title %}Impact Centre Chrétien Sherbrooke{% endblock %}</title>
     
     <!-- Bootstrap 5 CSS -->
@@ -33,7 +35,7 @@
                 Impact Centre Chrétien
             </a>
             
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             
@@ -143,7 +145,7 @@
     {% endwith %}
 
     <!-- Main Content -->
-    <main class="container-fluid py-4">
+    <main class="container-fluid py-2 py-md-4">
         {% block content %}{% endblock %}
     </main>
 
@@ -170,6 +172,7 @@
     <!-- Custom JS -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     <script src="{{ url_for('static', filename='js/pwa.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/mobile.js') }}"></script>
     <script>
         // Initialize AOS animations
         AOS.init({
