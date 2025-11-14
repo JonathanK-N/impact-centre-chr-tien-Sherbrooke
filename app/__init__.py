@@ -57,4 +57,9 @@ def create_app(config_name='default'):
         from datetime import datetime
         return datetime.now().year
     
+    # Route de santé pour Railway
+    @app.route('/health')
+    def health_check():
+        return {'status': 'healthy'}, 200
+    
     return app
