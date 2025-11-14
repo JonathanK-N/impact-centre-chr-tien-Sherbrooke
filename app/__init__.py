@@ -60,6 +60,6 @@ def create_app(config_name='default'):
     # Route de santé pour Railway
     @app.route('/health')
     def health_check():
-        return {'status': 'healthy'}, 200
+        return 'OK', 200
     
     return app
