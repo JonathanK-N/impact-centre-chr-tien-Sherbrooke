@@ -54,5 +54,9 @@ class User(UserMixin, db.Model):
     def is_admin(self):
         return self.role == 'Admin'
     
+    def is_department_responsible(self):
+        from app.models.department import Department
+        return Department.query.filter_by(responsible_id=self.id, is_active=True).first() is not None
+    
     def __repr__(self):
         return f'<User {self.email}>'

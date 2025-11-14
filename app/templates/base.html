@@ -14,6 +14,14 @@
     <!-- Custom CSS -->
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
     
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="ICC Sherbrooke">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='icons/icon-192x192.png') }}">
+    
     {% block extra_css %}{% endblock %}
 </head>
 <body>
@@ -76,6 +84,13 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ url_for('admin.dashboard') }}">
                                     <i class="bi bi-gear me-1"></i>Administration
+                                </a>
+                            </li>
+                        {% endif %}
+                        {% if current_user.is_department_responsible() %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('department.manage') }}">
+                                    <i class="bi bi-building me-1"></i>Mon département
                                 </a>
                             </li>
                         {% endif %}
@@ -154,6 +169,7 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <!-- Custom JS -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/pwa.js') }}"></script>
     <script>
         // Initialize AOS animations
         AOS.init({
@@ -162,6 +178,19 @@
             once: true,
             offset: 100
         });
+        
+        // Register Service Worker for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/static/sw.js')
+                    .then(registration => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch(registrationError => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
     </script>
     
     {% block extra_js %}{% endblock %}
