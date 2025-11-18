@@ -4,7 +4,7 @@ WORKDIR /app
 
 # Copier les fichiers du backend
 COPY impact-centre-mobile/backend/package*.json ./
-RUN npm ci --only=production
+RUN npm install --production
 
 COPY impact-centre-mobile/backend/ ./
 RUN npm run build
